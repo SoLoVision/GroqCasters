@@ -1,256 +1,746 @@
-YouTube description:
-
-Discover the top 3 features NotebookLM is missing and how GroqCasters steps in to fill the gap! If you've been exploring Google's NotebookLM for turning informational content into podcasts, you'll love what GroqCasters offers as a free, open-source alternative. From custom voices to multi-character podcast scripts, GroqCasters takes your blogs, articles, and news posts to the next level—delivering professional, real-sounding AI podcast dialogues.
-
-In this video, we'll show you how GroqCasters enhances functionality by:
-
-- Allowing users to customize voices for a more personal touch.
-- Supporting user-written scripts for full creative control.
--Enabling multi-character podcasts, far beyond the two-voice limit of NotebookLM.
-
-Explore why GroqCasters is the ultimate podcast creation tool and how it beats NotebookLM in creating high-quality, AI-powered podcasts from your content.
-
-###
-
-YouTube transcript:
-
-you can use Google if you want but I'll
-be using grle because it allows us to
-quickly create a synopsis of any news
-story or other web content and that
-makes for a very nice input file for our
-new grock cters application I'm partial
-to the Llama versatile model because
-it's a nice allpurpose General use llm
-for all sorts of uses it's very what's
-the word I'm looking for versatile no
-that's not it I'll think of it it's
-versatile it's right there in the name
-it'll come to me in the meantime let's
-make a synopsis of this Three Mile
-Island news
-article our new groter application can
-operate in two ways it can either take a
-Two operational modes
-source of information like this news
-article and write its own podcast
-dialogue script or we can supply at the
-script and groter will just skip ahead
-to generating the voices here are the
-results of an earlier test where I Sav
-the news article to an input.txt file
-and graser created this dialogue between
-Natural language dialog generation
-Mike and Rachel our robot podcasters our
-script will include a lot of Articles of
-natural speech including nervous
-laughter pauses and the occasional um
-or these are the sorts of things that
-help humanize our output since 11 Labs
-Imperfect, human sounding voice generation
-can't directly insert nervous laughter
-we've used the freeware bark generator
-from sunno AI I'm running this on an 8
-GB Nvidia 470 RTX GPU and the voice
-generation takes a while file maybe 15
-minutes of work for 10 minutes of audio
-since bark produces lowquality audio I
-run the final wave file through the free
-voice isolator on 11 Labs it actually
-made a mistake and inserted a third
-character I kept it in because despite
-More than two characters!
-
-###
-GitHub README:
-
-# GroqCasters
-
-GroqCasters is a Python application that generates podcast scripts and corresponding audio using AI technologies. It leverages PocketGroq for script generation and Bark for text-to-speech conversion, allowing for custom voice cloning.
-
-![image](https://github.com/user-attachments/assets/da5b4697-5324-47b6-8958-e98a1185f3da)
-
-
-## Table of Contents
-1. [Installation](#installation)
-2. [Usage](#usage)
-3. [Configuration](#configuration)
-4. [Custom Voice Samples](#custom-voice-samples)
-5. [Operational Parameters](#operational-parameters)
-6. [Dependencies](#dependencies)
-7. [Additional Resources](#additional-resources)
-
-## Installation
-
-1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/groqcasters.git
-   cd groqcasters
-   ```
-
-2. Create a virtual environment (optional but recommended):
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-   ```
-
-3. Install the required dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-
-4. Set up your GROQ API key as an environment variable:
-   ```
-   export GROQ_API_KEY=your_api_key_here
-   ```
-   On Windows, use `set GROQ_API_KEY=your_api_key_here`
-
-## Usage
-
-GroqCasters can be used in two modes:
-
-1. Generate a new script and audio:
-   ```
-   python groqcasters.py path/to/input_text.txt path/to/output_directory
-   ```
-
-2. Use a pre-written script:
-   ```
-   python groqcasters.py path/to/script.txt path/to/output_directory --use-script
-   ```
-
-The generated audio will be saved as `full_podcast.wav` in the specified output directory.
-
-## Configuration
-
-Create a `config.py` file in the project directory with the following content:
-
-```python
-DEFAULT_MODEL = "your_default_model_name"
-MAX_TOKENS = {
-    "outline": 8000,
-    "full_script": 8000,
-    "dialogue": 8000
-}
-HOST_PROFILES = """
-Host1 (Rachel): Enthusiastic, prone to personal anecdotes.
-Host2 (Mike): More analytical, enjoys making pop culture references.
-"""
-OUTLINE_PROMPT_TEMPLATE = "Your outline prompt template here"
-EXPAND_PROMPT_TEMPLATE = "Your expand prompt template here"
-DIALOGUE_PROMPT_TEMPLATE = "Your dialogue prompt template here"
-```
-
-Adjust these values according to your needs.
-
-## Custom Voice Samples
-
-To use custom voice samples:
-
-1. Prepare a short (15-30 second) clear audio clip of the desired voice.
-2. Save the audio as a WAV file.
-3. Update the `CUSTOM_MALE_VOICE_PATH` and `CUSTOM_FEMALE_VOICE_PATH` variables in `groqcasters.py` with the paths to your custom voice files.
-
-## Operational Parameters
-
-- `SUNO_USE_SMALL_MODELS`: Set to "True" to use smaller Bark models (default: True)
-- `SUNO_OFFLOAD_CPU`: Set to "True" to offload processing to CPU if GPU is unavailable (default: False)
-- `MALE_VOICE_PRESET`: Default male voice preset for Bark (default: "v2/en_speaker_6")
-- `FEMALE_VOICE_PRESET`: Default female voice preset for Bark (default: "v2/en_speaker_9")
-
-These can be adjusted in the `groqcasters.py` file.
-
-## Dependencies
-
-See the `requirements.txt` file for a full list of dependencies. Key dependencies include:
-
-- pocketgroq
-- bark
-- torch
-- numpy
-- scipy
-
-## Extending GroqCasters for Multiple Characters
-
-GroqCasters is initially designed for two characters, but you can extend it to support more. Here's a guide on how to modify the application for multiple characters:
-
-1. Update the `config.py` file:
-   - Extend the `HOST_PROFILES` to include additional characters:
-     ```python
-     HOST_PROFILES = """
-     Host1 (Rachel): Enthusiastic, prone to personal anecdotes.
-     Host2 (Mike): More analytical, enjoys making pop culture references.
-     Host3 (Alex): Tech-savvy, often explains complex concepts.
-     Host4 (Sarah): Creative, brings in artistic perspectives.
-     """
-     ```
-
-2. Modify the `groqcasters.py` file:
-   - Add voice presets for new characters:
-     ```python
-     VOICE_PRESETS = {
-         "rachel": "v2/en_speaker_9",
-         "mike": "v2/en_speaker_6",
-         "alex": "v2/en_speaker_2",
-         "sarah": "v2/en_speaker_4"
-     }
-     ```
-   - Update the `_create_voice_prompt` method to handle multiple custom voices:
-     ```python
-     def __init__(self):
-         # ... existing code ...
-         self.custom_voices = {
-             "rachel": self._create_voice_prompt("path/to/rachel_voice.wav"),
-             "mike": self._create_voice_prompt("path/to/mike_voice.wav"),
-             "alex": self._create_voice_prompt("path/to/alex_voice.wav"),
-             "sarah": self._create_voice_prompt("path/to/sarah_voice.wav")
-         }
-     ```
-   - Modify the `generate_audio_from_script` method to use the new voice selection:
-     ```python
-     def generate_audio_from_script(self, script, output_dir):
-         lines = script.split('\n')
-         audio_segments = []
-         
-         for line in lines:
-             if line.strip():
-                 speaker, text = line.split(':', 1)
-                 speaker = speaker.strip().lower()
-                 text = text.strip()
-                 
-                 voice = self.custom_voices.get(speaker) or VOICE_PRESETS.get(speaker, VOICE_PRESETS["rachel"])
-                 
-                 try:
-                     # ... existing audio generation code ...
-                 except Exception as e:
-                     print(f"Error generating audio for line: {line}")
-                     print(f"Error details: {e}")
-         
-         # ... rest of the method remains the same ...
-     ```
-
-3. Update the script generation prompts:
-   - Modify the `OUTLINE_PROMPT_TEMPLATE`, `EXPAND_PROMPT_TEMPLATE`, and `DIALOGUE_PROMPT_TEMPLATE` in `config.py` to include instructions for handling multiple characters.
-
-4. Adjust the script parsing:
-   - If your input scripts have a specific format for multiple speakers, update the script parsing logic in `generate_audio_from_script` to handle this format correctly.
-
-5. Test thoroughly:
-   - Create test scripts with multiple characters to ensure the system handles them correctly.
-   - Generate audio for these test scripts and verify that each character has the correct voice.
-
-Remember to update any other parts of the code that might assume a two-character setup, such as any hardcoded references to "Rachel" or "Mike".
-
-By following these steps, you can extend GroqCasters to support as many characters as you need. This allows for creating more diverse and dynamic podcast scripts with a wider range of voices and personalities.
-
-## Additional Resources
-
-- [Bark GitHub Repository](https://github.com/suno-ai/bark)
-- [PocketGroq Documentation](https://pocketgroq.readthedocs.io/)
-- [Groq API Documentation](https://console.groq.com/docs/quickstart)
-
-For more information on using Bark and PocketGroq, refer to their respective documentation:
-
-- [Bark GitHub Docs](https://github.com/suno-ai/bark/blob/main/README.md)
-- [PocketGroq Docs](https://github.com/jgravelle/pocketgroq/blob/main/README.md)
-
+0:01
+opener Ohio State back at home this week
+0:03
+to face Iowa that is Tim May the 41y
+0:05
+year vet that's Andy B with me Spencer
+0:07
+Holbrook it's Buckey versus hawkey um
+0:09
+the battle for the eyes uh and we're
+0:12
+going to talk about it because we just
+0:13
+heard from Ryan Day from Chip Kelly from
+0:14
+Jim nlls the whole gang uh in the Woody
+0:17
+Hayes Athletics Center here Tim what'd
+0:18
+you learn man I love the line that Jim N
+0:23
+said about Caleb DS he was he's been
+0:26
+activated I mean I'm just you know
+0:29
+paraphrasing that a little bit use the
+0:30
+word activate activated Caleb Downs kind
+0:33
+of like a mission impossible or the born
+0:36
+Identity or something he's gotten the
+0:38
+call we're going to use you in different
+0:41
+ways we're going to bust up stuff with
+0:43
+just your subterfuge and uh we all saw
+0:46
+it on display from the first play on uh
+0:49
+on Saturday night against Michigan State
+0:51
+and we raved about it then and and we
+0:53
+had the right to yes they were playing
+0:55
+him a little bit differently because he
+0:57
+is one of the outstanding players in the
+0:59
+nation maybe the best safety lean Ransom
+1:02
+would give him an argument about that
+1:03
+but uh ladies and gentlemen Caleb DS has
+1:06
+been activated what' you Learners you
+1:08
+can't out scheme Phil Parker I think
+1:10
+that was a big takeway Ryan Day talked
+1:12
+about it and then Chip Kelly talked
+1:13
+about it they're going to try to
+1:14
+simplify things for this Ohio State
+1:16
+offense and let the players play this is
+1:18
+an Iowa defense that historically just
+1:21
+makes you earn everything and I think
+1:23
+with the offense a little bit on the
+1:25
+Iowa side with Caleb Johnson in that run
+1:26
+game they also make the defense earn it
+1:29
+too because they bruise and y a y and
+1:34
+then then second you're on a second then
+1:36
+you're on Third and so I think this game
+1:39
+is going to come down to the speed of
+1:40
+the Ohio State offense and not
+1:42
+necessarily the play calling and trying
+1:44
+to be the schematic wizard that we know
+1:47
+that Chip Kelly can be it's letting Ohio
+1:49
+State's players use the talent they have
+1:52
+and win this game yeah I thought that
+1:53
+was interesting too this seems like Ohio
+1:55
+State's well aware that this is not um
+1:56
+your older brother's Iowa team that they
+1:58
+beat 54 to 10 in 22 um the one with the
+2:01
+inft offense that was throwing it
+2:02
+directly to the chest of Tanner
+2:04
+mallister and Tommy anenberg like this
+2:06
+is a team that that is pretty pretty
+2:08
+damn good especially defensively but
+2:10
+they're getting better offensively Caleb
+2:12
+Johnson Heisman Trophy contending
+2:13
+running back like feels like a real
+2:15
+bring your own hard hat game you know
+2:16
+pack a lunch pail bring your hard hat
+2:18
+you're going into the coal mine buddy um
+2:20
+and you better come out uh you know
+2:21
+Victorious so I just think that it's
+2:23
+interesting the way that they're talking
+2:25
+about this game it is not a typical um
+2:28
+you know home match up against a a
+2:31
+lesser than big 10 team they are really
+2:33
+really ratcheting up for this and they
+2:35
+think that this is going to be a a real
+2:37
+battle um and I just I like the tone
+2:40
+that was set in there and I think that's
+2:41
+my big takeaway is just you know maybe
+2:43
+that's a lazy take because there's a lot
+2:45
+we did learn but I just think like the
+2:47
+number one thing is like the tone that
+2:48
+Ryan day is setting the way Chip Kelly
+2:50
+is talking about this defense this this
+2:52
+Iowa defense and the way they're going
+2:53
+to attack it and in the way Jim nolles
+2:54
+was talking about you know taking
+2:56
+ownership for everything not not pinning
+2:58
+it on the players talking about the
+3:00
+progress they're making still need to be
+3:01
+a lot better which I'm sure you're going
+3:02
+to get into um here in just a little bit
+3:04
+but the tone they're setting is that
+3:06
+that they know this is going to be a big
+3:08
+time uh you know challenge for them on
+3:11
+bottom line is Kirk fence has been there
+3:12
+since 1999 his motorcop Randa has really
+3:15
+not changed a whole lot even now it
+3:17
+hasn't changed that greatly from the
+3:19
+standpoint of he wants to control things
+3:22
+at the line of scrimmage the best he can
+3:24
+cuz that's where everything emanates and
+3:26
+he wants to get to the fourth quarter
+3:27
+with a chance to win the game yep and uh
+3:29
+it's classic I don't call it old time
+3:32
+it's just classic football I mean you
+3:33
+know Jim trussle was that kind of Coach
+3:36
+uh when you were better than another
+3:38
+team in a in a greater sense you did
+3:40
+have some Bluffs but mainly the idea was
+3:42
+to get to the fourth quarter either with
+3:45
+the lead or a chance to win that has not
+3:47
+changed even even with the new offensive
+3:49
+coordinator at uh at Iowa uh there it's
+3:52
+still uh what sets Iowa apart is that
+3:56
+pragmatic approach but also the fact
+3:58
+they can throw two I didn't get a chance
+4:00
+to ask Jim NS a question but I was going
+4:02
+to ask him about this they get a chance
+4:04
+to have two sometimes three tight ends
+4:06
+on the field at the same time Ohio State
+4:08
+fans remember greatly whatever the year
+4:11
+was I get them mixed up whether it was
+4:13
+uh 17 or 18 17 17 when basically Iowa
+4:17
+beat Ohio State by throwing to the tight
+4:19
+end almost every other play and they
+4:22
+have that capability again in this
+4:24
+offense but they also have a really
+4:26
+really good maybe great running back in
+4:29
+k CB Jones so uh uh that's the conundrum
+4:33
+for the Ohio State Defense is is going
+4:35
+to be a physical battle and then you
+4:37
+might have a big guy to slip right
+4:38
+around you and try to make a big play as
+4:40
+a tight end and you've got a running
+4:42
+back boy you give him that much and he
+4:43
+takes a mile so uh it it's really this
+4:47
+is about as physical as you can get from
+4:49
+the initial challenge for this defense
+4:52
+yeah Jim NS uh I think it's really
+4:56
+really interesting Jims talked about how
+4:58
+they need to play more press man um
+5:00
+Sunny Styles is progressing and um he's
+5:02
+pretty pleased with his ability to learn
+5:05
+all of these positions and and how he's
+5:06
+transitioning in the linebacker room I
+5:07
+know there's been some hiccups along the
+5:08
+way but I think you know if you truth
+5:11
+Ser him to Ohio State they probably
+5:12
+expected some of those and so you're
+5:13
+kind of getting the sense from Jim NES
+5:15
+that he likes where Sunny Styles is
+5:17
+despite some of those struggles the last
+5:18
+two weeks um but then also uh you know I
+5:21
+brought up a stat that Ohio State leads
+5:23
+the nation and another reporter brought
+5:24
+up a stat that Ohio leads the nation in
+5:26
+jimn called it rat poison and then was
+5:28
+asked if he would ever be satisfied this
+5:30
+defense I thought they it was really
+5:31
+interesting to get some insight from him
+5:33
+on where he stands on like how he's
+5:35
+feeling about this defense and how you
+5:37
+know they've started pretty slow the
+5:38
+last two weeks he said exactly that and
+5:40
+he put it all on himself yeah he wants
+5:42
+zero points allowed fewer than 100 yards
+5:44
+allowed two defensive touchdowns and
+5:47
+four turnovers Force that's obviously
+5:50
+the highest of standards and they got
+5:51
+pretty close to that against Western
+5:53
+Michigan aside from the turnovers forced
+5:55
+but yeah look he has high expectations
+5:58
+for this defense he's someone was never
+6:00
+satisfied and I think the last couple of
+6:03
+weeks like you said they came out slow
+6:05
+they adjusted but they want to be better
+6:07
+at the start he put that on himself he
+6:09
+says that he needs to be better uh you
+6:11
+know with regards to Sunny Styles he was
+6:13
+asked about Sunny's development and he
+6:16
+called it a process that's accelerated
+6:18
+like his transition from safety to
+6:19
+linebacker he also said you know whether
+6:22
+it's sunny or different different kind
+6:23
+of defensive player if they're out of
+6:24
+place or they're off on a play he said
+6:26
+that's on me like I need to coach it
+6:28
+better I need to train them better so he
+6:30
+took like he said a lot of ownership
+6:32
+today I felt like in the press
+6:34
+conference not that he doesn't do that
+6:36
+normally but I think that was kind of a
+6:37
+message being sent that you know he
+6:39
+needs to be better he wants to be better
+6:41
+uh for this defense again this is all in
+6:43
+mind keeping in mind that they've only
+6:44
+given up what 27 points or something
+6:48
+through three games four games so like
+6:51
+again it's the nitpicky nature of it uh
+6:54
+but I think you know maybe we could
+6:55
+shift gears to the offense a little bit
+6:57
+a lot of talk about will Howard the
+6:59
+quarterback position and they seem to be
+7:01
+pleased with his development both Chip
+7:02
+Kelly and Ryan day and I think that's
+7:05
+partly why they were comfortable going
+7:06
+for it on fourth down in those
+7:08
+situations they're getting more
+7:10
+comfortable putting more and more on his
+7:11
+plate not only as a thrower but also as
+7:13
+a runner yeah not only in those kind of
+7:16
+situations is it imperative for the
+7:18
+quarterback to recognize what's going on
+7:20
+at the line of scrimmage as the as they
+7:22
+get into that play it's imperative for
+7:24
+him to know who his hot route is from
+7:26
+the standpoint of are they trying to
+7:28
+take that away and number three final
+7:30
+analysis throw a strike yeah you know
+7:33
+that's where will Howard you know the
+7:35
+other night was I thought was really
+7:36
+good as Chip Kelly said yeah you'd like
+7:38
+for him to go 100% when he throws the
+7:40
+ball on you know basically complete
+7:42
+every pass you throw but the but the
+7:44
+pass to mbuka I still say is an outcut
+7:47
+can be a great throw that was a great
+7:49
+throw because only auka could get it and
+7:52
+it gave him space to then make a play
+7:54
+after the catch and it was this like I
+7:57
+said it's as simple a pass and throws
+7:59
+you ever to run me and my buddy Mike
+8:00
+Lawrence used to run that into the
+8:02
+ground against any any comers you know
+8:04
+and the pickup football games way back
+8:06
+in the 60s and 70s in Lin Texas it still
+8:09
+works at the highest levels uh
+8:13
+especially when you've got a great guy
+8:14
+on the other end catching it which Mike
+8:15
+Lawrence was so you were playing
+8:17
+quarterback yeah I was throw I was
+8:19
+always extremely accurate couldn't throw
+8:20
+the ball 45 yards but I was extremely
+8:23
+accurate that has nothing to do with it
+8:24
+okay the point is the quarterback
+8:26
+recognizing getting them into the right
+8:28
+play and then throwing a strike which a
+8:32
+lot of quarterbacks even at this level
+8:35
+aren't don't always hit all three of
+8:36
+those notes will Howard is right now and
+8:39
+and I think that that's why this Ohio
+8:40
+State offense is clicking uh Chip Kelly
+8:44
+said that uh if you try to double any of
+8:46
+these guys if you try to double everyone
+8:48
+uh in the passing game then that's going
+8:50
+to be a penalty because you have too
+8:50
+many guys field no it's not because you
+8:52
+could have uh two guys on all five
+8:55
+eligible receivers and one guy rushing
+8:57
+you well there you have it Chip Kelly
+9:00
+was completely wrong Tim May totally
+9:02
+exonerated I I did the math immediately
+9:04
+soon as he said it I go not unless you
+9:05
+got extra guys on the field all right so
+9:08
+I did ask Ryan day almost the first
+9:10
+thing that he was asked about the Right
+9:11
+Guard spot they still like the
+9:13
+rotation I personally think that they
+9:16
+would be better served
+9:18
+to pick one stick with one I think
+9:21
+Austin Cal's playing really really good
+9:23
+football right now but I don't get paid
+9:25
+a lot of money to do this Ryan day does
+9:27
+so they're going to continue to rotate
+9:29
+these right guards and they really like
+9:32
+what they have in both these guys they
+9:33
+said they graded out similarly which I'm
+9:35
+a little surprised by not because I
+9:37
+thought T shaba was bad but that was a
+9:39
+pretty big holding penalty that he did
+9:41
+get whistled for Austin serval hasn't
+9:43
+had a penalty so
+9:46
+I I wonder how effective it's going to
+9:49
+be against Iowa if it is then I'll be
+9:51
+proven I guess wrong I don't think I'm
+9:52
+saying that it's not going to work I'm
+9:54
+just intrigued that that the fact that
+9:56
+they're going to keep doing this you
+9:57
+know with just a week until you go to
+9:59
+Eugene it's going to be a big week of
+10:01
+evaluation because Iowa's pretty stout
+10:03
+on that defensive line especially the
+10:05
+interior so we're going to learn a lot
+10:08
+about teger chabola and Austin Sahel
+10:10
+maybe they're waiting for this data
+10:11
+point maybe they want that in you know
+10:13
+the course of this evaluation yeah like
+10:15
+you said Ryan Day said they TR it out
+10:17
+pretty similarly so if one's not that
+10:19
+far ahead than the other I mean what do
+10:21
+you what do you really base that off of
+10:22
+you don't want to pick blindly so again
+10:25
+Tegra chabola has been the starter he
+10:26
+started every game so far I think it's
+10:28
+been really impressive of how Austin
+10:29
+stal has just kind of dropped in and not
+10:31
+really skipped a beat I think that's
+10:33
+hard that's one thing I would like to
+10:34
+ask going forward like is that rare and
+10:36
+how hard is that to do for an offensive
+10:38
+lineman I'd imagine it's hard because
+10:40
+you're coming in cold just like you know
+10:41
+Deon Brown throwing that pass right
+10:43
+you're not playing in the game you have
+10:44
+to drop in so we'll learn a lot this
+10:47
+week I have no problem with them playing
+10:49
+two guards I mean uh if they both
+10:51
+deserve it like like Ryan day is
+10:53
+pointing pointing out they both deserve
+10:56
+they both deserve to play why not play
+10:58
+them you know you play multiple
+11:00
+receivers you play multiple running
+11:02
+backs uh they don't play multiple
+11:04
+quarterbacks obviously for a reason but
+11:06
+the bottom line is in and then the
+11:07
+backup quarterback gets in there and pro
+11:09
+maybe the best pass of the whole night u
+11:12
+in my opinion Devin Brown to uh Jeremiah
+11:14
+Smith who made it look made it look easy
+11:17
+making a one-handed catch yeah that's
+11:20
+where we are ladies and gentlemen in the
+11:23
+course of football Evolution but the
+11:25
+bottom line is I have no problem with
+11:27
+them playing uh having a guy who feels
+11:29
+feels competent and confident when he
+11:31
+goes into the game at guard uh when in
+11:35
+fact you may need that later on down the
+11:37
+down the road and like I pointed out on
+11:38
+Saturday night sometimes those holding
+11:39
+calls are quite arbitrary and uh just
+11:42
+because you haven't been caught uh
+11:44
+holding doesn't mean you won be caught
+11:46
+uh it's kind of like uh at Indianapolis
+11:48
+Motor Speedway there's two kinds of
+11:49
+drivers ones who've hit the wall and
+11:51
+ones who are going to hit the wall so uh
+11:53
+that's that's where I that's where my my
+11:56
+take attack because I think terer shabo
+11:57
+has done some very good things from what
+11:59
+I've watched on video except for this
+12:02
+week when peacock made it difficult yeah
+12:06
+well we won't have to deal with that
+12:06
+again this year uh what Ohio state has
+12:09
+to deal with on Saturday night is Iowa
+12:11
+Saturday afternoon I guess is Iowa 3:30
+12:13
+on CBS letter Monroe will be in the
+12:15
+building for that for now we're just
+12:16
+going to go get to work providing all
+12:17
+that coverage that we bring to Letterman
+12:19
+rowe.com go over to Letterman r.com get
+12:21
+your membership right now right now go
+12:23
+do it right now uh click the the little
+12:26
+thumbs up below this video like the
+12:28
+video below and that helps us out a lot
+12:30
+subscribe to the YouTube channel and
+12:31
+then go over to Letterman row.com come
+12:33
+hang out in the Letterman Lounge Message
+12:34
+Board Tim May content is at Letterman
+12:36
+row Andy boms and mind Spencer H Brook
+12:39
+thanks for watching thanks for listening
+12:40
+we're going to get out of here we'll be
+12:41
+back Wednesday night for more coverage
+12:43
+of the Buckey and then we'll be in the
+12:44
+Horseshoe on Saturday for Ohio State and
+12:46
+Iowa
